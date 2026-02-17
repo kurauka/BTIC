@@ -12,5 +12,8 @@ COPY . /var/www/html/
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
 
-# Expose port 80
-EXPOSE 80
+# Update Apache to listen on port 10000 (Render default)
+RUN sed -i 's/80/10000/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
+
+# Expose port 10000
+EXPOSE 10000
