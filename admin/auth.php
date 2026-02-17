@@ -30,7 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit;
         }
     } catch (PDOException $e) {
-        header("Location: login.php?error=Database error");
+        // Show specific error for debugging
+        header("Location: login.php?error=DB Error: " . urlencode($e->getMessage()));
         exit;
     }
 } else {
