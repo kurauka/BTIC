@@ -1,13 +1,9 @@
 -- Database Schema for Bandari Tech & Innovation Club
--- Generated: 2026-02-17
+-- Optimized for Aiven (Inline Primary Keys)
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+03:00";
-
---
--- Database: `bandari_tech_club`
---
 
 -- --------------------------------------------------------
 
@@ -15,13 +11,17 @@ SET time_zone = "+03:00";
 -- Table structure for table `users`
 --
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
   `role` enum('admin','member') DEFAULT 'member',
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -37,16 +37,18 @@ INSERT INTO `users` (`id`, `username`, `email`, `password_hash`, `role`) VALUES
 -- Table structure for table `projects`
 --
 
+DROP TABLE IF EXISTS `projects`;
 CREATE TABLE `projects` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
   `description` text NOT NULL,
   `category` varchar(50) DEFAULT NULL,
-  `tags` varchar(255) DEFAULT NULL, -- Comma-separated tags
+  `tags` varchar(255) DEFAULT NULL,
   `image_url` varchar(255) DEFAULT NULL,
   `project_url` varchar(255) DEFAULT '#',
   `is_featured` tinyint(1) DEFAULT 0,
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -65,8 +67,9 @@ INSERT INTO `projects` (`id`, `title`, `description`, `category`, `tags`, `is_fe
 -- Table structure for table `events`
 --
 
+DROP TABLE IF EXISTS `events`;
 CREATE TABLE `events` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
   `subtitle` varchar(255) DEFAULT NULL,
   `description` text NOT NULL,
@@ -76,7 +79,8 @@ CREATE TABLE `events` (
   `location` varchar(255) DEFAULT 'Bandari Maritime Academy',
   `tags` varchar(255) DEFAULT NULL,
   `registration_link` varchar(255) DEFAULT '#',
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -92,12 +96,14 @@ INSERT INTO `events` (`id`, `title`, `subtitle`, `description`, `event_date`, `l
 -- Table structure for table `programs`
 --
 
+DROP TABLE IF EXISTS `programs`;
 CREATE TABLE `programs` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
   `description` text NOT NULL,
-  `icon_class` varchar(50) DEFAULT NULL, -- Remix Icon class if needed
-  `display_order` int(11) DEFAULT 0
+  `icon_class` varchar(50) DEFAULT NULL,
+  `display_order` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -118,13 +124,15 @@ INSERT INTO `programs` (`id`, `title`, `description`, `display_order`) VALUES
 -- Table structure for table `stats`
 --
 
+DROP TABLE IF EXISTS `stats`;
 CREATE TABLE `stats` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL,
   `value` int(11) NOT NULL,
   `suffix` varchar(10) DEFAULT '+',
   `icon_class` varchar(50) DEFAULT NULL,
-  `display_order` int(11) DEFAULT 0
+  `display_order` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -136,7 +144,43 @@ INSERT INTO `stats` (`id`, `label`, `value`, `suffix`, `icon_class`, `display_or
 (2, 'Maritime Projects', 12, '+', 'ri-ship-2-line', 2),
 (3, 'Awards Won', 5, '+', 'ri-trophy-line', 3),
 (4, 'Industry Partners', 8, '+', 'ri-hand-heart-line', 4),
-(5, 'Driving innovation for the maritime sector', 0, '', 'ri-earth-line', 5); -- Special case for the "Blue Economy" block
+(5, 'Driving innovation for the maritime sector', 0, '', 'ri-earth-line', 5);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `organizers`
+--
+
+DROP TABLE IF EXISTS `organizers`;
+CREATE TABLE `organizers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `role` varchar(100) NOT NULL,
+  `image_url` varchar(255) DEFAULT NULL,
+  `bio` text DEFAULT NULL,
+  `linkedin_url` varchar(255) DEFAULT '#',
+  `display_order` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `partners`
+--
+
+DROP TABLE IF EXISTS `partners`;
+CREATE TABLE `partners` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `logo_url` varchar(255) NOT NULL,
+  `website_url` varchar(255) DEFAULT '#',
+  `display_order` int(11) DEFAULT 0,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -144,13 +188,15 @@ INSERT INTO `stats` (`id`, `label`, `value`, `suffix`, `icon_class`, `display_or
 -- Table structure for table `gallery`
 --
 
+DROP TABLE IF EXISTS `gallery`;
 CREATE TABLE `gallery` (
-  `id` int(11) NOT NULL,
-  `title` varchar(100) NOT NULL, -- Caption
-  `image_url` varchar(255) DEFAULT NULL, -- Or icon class for placeholder
-  `icon_class` varchar(50) DEFAULT NULL, -- Using icons for now
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) NOT NULL,
+  `image_url` varchar(255) DEFAULT NULL,
+  `icon_class` varchar(50) DEFAULT NULL,
   `category` varchar(50) DEFAULT NULL,
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -170,39 +216,17 @@ INSERT INTO `gallery` (`id`, `title`, `icon_class`, `category`) VALUES
 -- Table structure for table `messages`
 --
 
+DROP TABLE IF EXISTS `messages`;
 CREATE TABLE `messages` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `first_name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `interest_type` varchar(50) DEFAULT NULL,
   `message_body` text NOT NULL,
   `is_read` tinyint(1) DEFAULT 0,
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Indexes for dumped tables
---
-
-ALTER TABLE `users` ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `username` (`username`), ADD UNIQUE KEY `email` (`email`);
-ALTER TABLE `projects` ADD PRIMARY KEY (`id`);
-ALTER TABLE `events` ADD PRIMARY KEY (`id`);
-ALTER TABLE `programs` ADD PRIMARY KEY (`id`);
-ALTER TABLE `stats` ADD PRIMARY KEY (`id`);
-ALTER TABLE `gallery` ADD PRIMARY KEY (`id`);
-ALTER TABLE `messages` ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
-ALTER TABLE `users` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-ALTER TABLE `projects` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-ALTER TABLE `events` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-ALTER TABLE `programs` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-ALTER TABLE `stats` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-ALTER TABLE `gallery` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-ALTER TABLE `messages` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 COMMIT;

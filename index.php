@@ -2191,39 +2191,42 @@
         <div class="contact-form reveal-right delay-2">
           <h3 style="font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.3rem; margin-bottom: 1.8rem;">Send
             us a Message</h3>
-          <div class="form-row">
-            <div class="form-group">
-              <label>First Name</label>
-              <input type="text" placeholder="John" />
+
+          <form action="submit_contact.php" method="POST">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="first_name">First Name</label>
+                <input type="text" id="first_name" name="first_name" placeholder="John" required />
+              </div>
+              <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <input type="text" id="last_name" name="last_name" placeholder="Doe" required />
+              </div>
             </div>
             <div class="form-group">
-              <label>Last Name</label>
-              <input type="text" placeholder="Doe" />
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="john@example.com" required />
             </div>
-          </div>
-          <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" placeholder="john@example.com" />
-          </div>
-          <div class="form-group">
-            <label>I'm interested in</label>
-            <select>
-              <option value="">Select an option...</option>
-              <option>Joining as a Member</option>
-              <option>Partnership / Sponsorship</option>
-              <option>Collaboration on a Project</option>
-              <option>Media / Press Inquiry</option>
-              <option>General Inquiry</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Message</label>
-            <textarea placeholder="Tell us about yourself or your inquiry..."></textarea>
-          </div>
-          <button class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 1rem; padding: 1rem;"
-            onclick="handleSubmit(this)">
-            <i class="ri-mail-send-line"></i> Send Message
-          </button>
+            <div class="form-group">
+              <label for="interest_type">I'm interested in</label>
+              <select id="interest_type" name="interest_type">
+                <option value="General Inquiry">General Inquiry</option>
+                <option value="Membership">Joining as a Member</option>
+                <option value="Partnership">Partnership / Sponsorship</option>
+                <option value="Collaboration">Collaboration on a Project</option>
+                <option value="Media">Media / Press Inquiry</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message_body">Message</label>
+              <textarea id="message_body" name="message_body" placeholder="Tell us about yourself or your inquiry..."
+                required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary"
+              style="width: 100%; justify-content: center; font-size: 1rem; padding: 1rem;">
+              <i class="ri-mail-send-line"></i> Send Message
+            </button>
+          </form>
         </div>
       </div>
     </div>
