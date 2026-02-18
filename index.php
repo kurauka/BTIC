@@ -1718,7 +1718,7 @@
           <div class="globe-ring"></div>
           <div class="globe-ring"></div>
           <div class="globe-core">
-            <img src="assets/images/logo.png" alt="Bandari Tech Club Logo" class="hero-logo reveal delay-3"
+            <img src="assets/images/logo.jpeg" alt="Bandari Tech Club Logo" class="hero-logo reveal delay-3"
               style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; filter: invert(1); mix-blend-mode: screen;">
           </div>
           <div class="orbit-dot"></div>
