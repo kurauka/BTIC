@@ -142,6 +142,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <a href="messages.php" class="nav-link <?php echo $current_page == 'messages.php' ? 'active' : ''; ?>">
                 <i class="ri-chat-smile-3-line"></i> Messages
         </a>
+        <a href="membership.php" class="nav-link <?php echo $current_page == 'membership.php' ? 'active' : ''; ?>">
+                <i class="ri-user-follow-line"></i> Membership
+        </a>
 
         <div class="menu-label">Management</div>
         <a href="organizers.php" class="nav-link <?php echo $current_page == 'organizers.php' ? 'active' : ''; ?>">

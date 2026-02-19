@@ -239,6 +239,7 @@ DROP TABLE IF EXISTS `membership_requests`;
 CREATE TABLE `membership_requests` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `full_name` varchar(100) NOT NULL,
+  `admission_number` varchar(50) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `institution` varchar(100) DEFAULT NULL,

@@ -2321,14 +2321,20 @@
             <input type="text" id="full_name" name="full_name" required>
           </div>
           <div class="form-group">
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" required>
+            <label for="admission_number">Admission Number</label>
+            <input type="text" id="admission_number" name="admission_number" placeholder="e.g. BMA/001/2024" required>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="join_email">Email Address</label>
-          <input type="email" id="join_email" name="email" required>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="join_email">Email Address</label>
+            <input type="email" id="join_email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" required>
+          </div>
         </div>
 
         <div class="form-row">
@@ -2349,7 +2355,6 @@
             <option value="Year 1">Year 1</option>
             <option value="Year 2">Year 2</option>
             <option value="Year 3">Year 3</option>
-            <option value="Year 4">Year 4</option>
             <option value="Staff/Faculty">Staff / Faculty</option>
             <option value="Other">Other</option>
           </select>
