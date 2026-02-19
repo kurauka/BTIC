@@ -4,3 +4,7 @@ vendor/
 Thumbs.db
 .idea/
 .vscode/
+
+# Uploads
+uploads/*
+!uploads/**/.gitkeep

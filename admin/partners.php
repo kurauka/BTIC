@@ -20,18 +20,40 @@ if (isset($_GET['delete'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_partner'])) {
     $name = $_POST['name'];
     $website_url = $_POST['website_url'];
-    $logo_url = $_POST['logo_url']; // Text input for now
+    $logo_path = '';
 
-    $stmt = $conn->prepare("INSERT INTO partners (name, website_url, logo_url, display_order) VALUES (:name, :website, :logo, 0)");
-    $stmt->bindParam(':name', $name);
-    $stmt->bindParam(':website', $website_url);
-    $stmt->bindParam(':logo', $logo_url);
+    // Handle File Upload
+    if (isset($_FILES['logo_file']) && $_FILES['logo_file']['error'] == 0) {
+        $target_dir = "../uploads/partners/";
+        $file_extension = strtolower(pathinfo($_FILES["logo_file"]["name"], PATHINFO_EXTENSION));
+        $new_filename = uniqid() . '.' . $file_extension;
+        $target_file = $target_dir . $new_filename;
 
-    if ($stmt->execute()) {
-        header("Location: partners.php?msg=Partner added successfully");
-        exit;
-    } else {
-        $error = "Failed to add partner.";
+        // Check if image file is a actual image
+        $check = getimagesize($_FILES["logo_file"]["tmp_name"]);
+        if ($check !== false) {
+            if (move_uploaded_file($_FILES["logo_file"]["tmp_name"], $target_file)) {
+                $logo_path = 'uploads/partners/' . $new_filename;
+            } else {
+                $error = "Sorry, there was an error uploading your file.";
+            }
+        } else {
+            $error = "File is not an image.";
+        }
+    }
+
+    if (!isset($error)) {
+        $stmt = $conn->prepare("INSERT INTO partners (name, website_url, logo_url, display_order) VALUES (:name, :website, :logo, 0)");
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':website', $website_url);
+        $stmt->bindParam(':logo', $logo_path);
+
+        if ($stmt->execute()) {
+            header("Location: partners.php?msg=Partner added successfully");
+            exit;
+        } else {
+            $error = "Failed to add partner.";
+        }
     }
 }
 
@@ -94,7 +116,8 @@ include 'includes/header.php';
                             </td>
                             <td data-label="Identity">
                                 <div style="font-weight: 700; color: var(--white); font-size: 1.1rem;">
-                                    <?php echo htmlspecialchars($p['name']); ?></div>
+                                    <?php echo htmlspecialchars($p['name']); ?>
+                                </div>
                             </td>
                             <td data-label="Presence">
                                 <a href="<?php echo htmlspecialchars($p['website_url']); ?>" target="_blank"
@@ -164,7 +187,7 @@ include 'includes/header.php';
             </button>
         </header>
 
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             <input type="hidden" name="add_partner" value="1">
             <div class="form-group">
                 <label class="form-label">Organizational Name</label>
@@ -172,9 +195,8 @@ include 'includes/header.php';
             </div>
 
             <div class="form-group">
-                <label class="form-label">Visual Asset (Logo URL)</label>
-                <input type="text" name="logo_url" class="form-input"
-                    placeholder="https://assets.logos.com/partner.svg">
+                <label class="form-label">Visual Asset (Upload Logo)</label>
+                <input type="file" name="logo_file" class="form-input" accept="image/*" required>
             </div>
 
             <div class="form-group">

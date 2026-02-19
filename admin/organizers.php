@@ -21,19 +21,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_organizer'])) {
     $name = $_POST['name'];
     $role = $_POST['role'];
     $bio = $_POST['bio'];
-    $image_url = $_POST['image_url']; // For now, text input. Uploads can be added later.
+    $image_path = '';
 
-    $stmt = $conn->prepare("INSERT INTO organizers (name, role, image_url, bio, display_order) VALUES (:name, :role, :image, :bio, 0)");
-    $stmt->bindParam(':name', $name);
-    $stmt->bindParam(':role', $role);
-    $stmt->bindParam(':image', $image_url);
-    $stmt->bindParam(':bio', $bio);
+    // Handle File Upload
+    if (isset($_FILES['image_file']) && $_FILES['image_file']['error'] == 0) {
+        $target_dir = "../uploads/organizers/";
+        $file_extension = strtolower(pathinfo($_FILES["image_file"]["name"], PATHINFO_EXTENSION));
+        $new_filename = uniqid() . '.' . $file_extension;
+        $target_file = $target_dir . $new_filename;
 
-    if ($stmt->execute()) {
-        header("Location: organizers.php?msg=Organizer added successfully");
-        exit;
-    } else {
-        $error = "Failed to add organizer.";
+        // Check if image file is a actual image
+        $check = getimagesize($_FILES["image_file"]["tmp_name"]);
+        if ($check !== false) {
+            if (move_uploaded_file($_FILES["image_file"]["tmp_name"], $target_file)) {
+                $image_path = 'uploads/organizers/' . $new_filename;
+            } else {
+                $error = "Sorry, there was an error uploading your file.";
+            }
+        } else {
+            $error = "File is not an image.";
+        }
+    }
+
+    if (!isset($error)) {
+        $stmt = $conn->prepare("INSERT INTO organizers (name, role, image_url, bio, display_order) VALUES (:name, :role, :image, :bio, 0)");
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':role', $role);
+        $stmt->bindParam(':image', $image_path);
+        $stmt->bindParam(':bio', $bio);
+
+        if ($stmt->execute()) {
+            header("Location: organizers.php?msg=Organizer added successfully");
+            exit;
+        } else {
+            $error = "Failed to add organizer.";
+        }
     }
 }
 
@@ -97,7 +119,8 @@ include 'includes/header.php';
                             </td>
                             <td data-label="Identity">
                                 <div style="font-weight: 700; color: var(--white);">
-                                    <?php echo htmlspecialchars($org['name']); ?></div>
+                                    <?php echo htmlspecialchars($org['name']); ?>
+                                </div>
                             </td>
                             <td data-label="Role">
                                 <span class="badge badge-accent"
@@ -166,7 +189,7 @@ include 'includes/header.php';
             </button>
         </header>
 
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             <input type="hidden" name="add_organizer" value="1">
             <div class="form-group">
                 <label class="form-label">Full Nomenclature</label>
@@ -180,8 +203,8 @@ include 'includes/header.php';
                         placeholder="Club Principal / Lead Mentor">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Profile Image URL</label>
-                    <input type="text" name="image_url" class="form-input" placeholder="https://...">
+                    <label class="form-label">Profile Image (Upload)</label>
+                    <input type="file" name="image_file" class="form-input" accept="image/*" required>
                 </div>
             </div>
 
