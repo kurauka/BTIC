@@ -32,214 +32,86 @@ $messages = $conn->query("SELECT * FROM messages ORDER BY created_at DESC")->fet
 include 'includes/header.php';
 ?>
 
-<style>
-    /* Reusing dashboard styles + specific ones */
-    .dashboard-wrapper {
-        display: flex;
-        min-height: 100vh;
-    }
-
-    .sidebar {
-        width: 260px;
-        background: rgba(5, 13, 26, 0.9);
-        border-right: 1px solid var(--border);
-        padding: 2rem 1.5rem;
-        display: flex;
-        flex-direction: column;
-        position: fixed;
-        height: 100vh;
-    }
-
-    .main-content {
-        flex: 1;
-        margin-left: 260px;
-        padding: 2rem;
-    }
-
-    /* Sidebar Links (Shared) */
-    .menu-label {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        color: var(--muted);
-        margin-bottom: 1rem;
-        margin-top: 2rem;
-    }
-
-    .menu-link {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.75rem 1rem;
-        color: var(--white);
-        text-decoration: none;
-        border-radius: 8px;
-        margin-bottom: 0.5rem;
-        transition: all 0.3s;
-    }
-
-    .menu-link:hover,
-    .menu-link.active {
-        background: rgba(0, 201, 167, 0.1);
-        color: var(--teal);
-    }
-
-    /* Table */
-    .content-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 2rem;
-        overflow: hidden;
-    }
-
-    .data-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1rem;
-    }
-
-    .data-table th {
-        text-align: left;
-        padding: 1rem;
-        color: var(--muted);
-        border-bottom: 1px solid var(--border);
-        font-weight: 600;
-    }
-
-    .data-table td {
-        padding: 1rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        color: var(--white);
-        vertical-align: top;
-    }
-
-    .data-table tr:last-child td {
-        border-bottom: none;
-    }
-
-    .action-btn {
-        padding: 0.4rem 0.8rem;
-        border-radius: 4px;
-        font-size: 0.8rem;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.3rem;
-        transition: all 0.2s;
-    }
-
-    .btn-view {
-        background: rgba(0, 201, 167, 0.15);
-        color: var(--teal);
-    }
-
-    .btn-delete {
-        background: rgba(255, 77, 79, 0.15);
-        color: var(--error);
-    }
-
-    .btn-view:hover {
-        background: rgba(0, 201, 167, 0.25);
-    }
-
-    .btn-delete:hover {
-        background: rgba(255, 77, 79, 0.25);
-    }
-
-    .badge {
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        font-size: 0.75rem;
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--muted);
-    }
-
-    .badge.unread {
-        background: rgba(245, 166, 35, 0.15);
-        color: var(--amber);
-    }
-</style>
-
 <div class="dashboard-wrapper">
     <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="login-logo" style="justify-content: flex-start; margin-bottom: 0;">
-            <i class="ri-anchor-line" style="color:var(--teal)"></i> BTIC<span>.</span>
-        </div>
-        <div class="menu-label">Main</div>
-        <a href="index.php" class="menu-link"><i class="ri-dashboard-line"></i> Dashboard</a>
-        <a href="projects.php" class="menu-link"><i class="ri-folder-line"></i> Projects</a>
-        <a href="events.php" class="menu-link"><i class="ri-calendar-event-line"></i> Events</a>
-        <a href="messages.php" class="menu-link active"><i class="ri-mail-line"></i> Messages</a>
-        <div class="menu-label">System</div>
-        <a href="settings.php" class="menu-link"><i class="ri-settings-line"></i> Settings</a>
-        <a href="logout.php" class="menu-link" style="margin-top: auto; color: var(--error);"><i
-                class="ri-logout-box-line"></i> Logout</a>
-    </aside>
+    <?php include 'includes/sidebar.php'; ?>
 
     <main class="main-content">
-        <div class="top-bar">
-            <div>
-                <h1 class="section-title" style="font-size: 1.8rem; margin: 0;">Messages</h1>
-                <p style="color: var(--muted); margin-top: 0.5rem;">Inquiries from the contact form</p>
-            </div>
-        </div>
+        <header class="page-header" style="margin-bottom: 3rem;">
+            <h1 class="section-title">Communication Center</h1>
+            <p class="section-subtitle">Review and manage inbound inquiries from club members and partners.</p>
+        </header>
 
-        <div class="content-card">
+        <div class="glass-card" style="padding: 0; overflow: hidden;">
             <?php if (count($messages) > 0): ?>
-                <table class="data-table">
+                <table class="premium-table">
                     <thead>
                         <tr>
-                            <th width="150">From</th>
-                            <th>Subject</th>
-                            <th>Message</th>
-                            <th width="100">Date</th>
-                            <th width="120">Actions</th>
+                            <th width="200">Correspondent</th>
+                            <th>Topic / Subject</th>
+                            <th>Executive Summary</th>
+                            <th width="120">Timestamp</th>
+                            <th width="140">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($messages as $msg): ?>
-                            <tr style="<?php echo $msg['is_read'] ? 'opacity: 0.7;' : ''; ?>">
-                                <td>
-                                    <div style="font-weight: 600;">
-                                        <?php echo htmlspecialchars($msg['first_name'] . ' ' . $msg['last_name']); ?>
+                            <tr style="<?php echo $msg['is_read'] ? 'opacity: 0.65;' : ''; ?>">
+                                <td data-label="Correspondent">
+                                    <div style="font-weight: 700; color: var(--white);">
+                                        <?php echo htmlspecialchars($msg['first_name'] . ' ' . $msg['last_name']); ?></div>
+                                    <div style="font-size: 0.8rem; color: var(--muted); margin-top: 0.1rem;">
+                                        <?php echo htmlspecialchars($msg['email']); ?></div>
+                                </td>
+                                <td data-label="Topic">
+                                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                        <?php if (!$msg['is_read']): ?>
+                                            <span class="badge badge-accent">URGENT</span>
+                                        <?php endif; ?>
+                                        <span
+                                            style="font-weight: 600; color: var(--muted);"><?php echo htmlspecialchars($msg['interest_type'] ?? 'Inquiry'); ?></span>
                                     </div>
-                                    <div style="font-size: 0.8rem; color: var(--muted);">
-                                        <?php echo htmlspecialchars($msg['email']); ?>
+                                </td>
+                                <td data-label="Summary" style="color: var(--muted); line-height: 1.5;">
+                                    <?php echo substr(htmlspecialchars($msg['message_body']), 0, 100) . '...'; ?>
+                                </td>
+                                <td data-label="Timestamp">
+                                    <div style="font-size: 0.85rem; color: var(--muted); font-weight: 600;">
+                                        <?php echo date('M d, Y', strtotime($msg['created_at'])); ?>
                                     </div>
                                 </td>
-                                <td>
-                                    <?php if (!$msg['is_read']): ?><span class="badge unread"
-                                            style="margin-right: 0.5rem;">NEW</span>
-                                    <?php endif; ?>
-                                    <?php echo htmlspecialchars($msg['interest_type'] ?? 'General'); ?>
-                                </td>
-                                <td style="color: var(--muted);">
-                                    <?php echo substr(htmlspecialchars($msg['message_body']), 0, 80) . '...'; ?>
-                                </td>
-                                <td style="font-size: 0.85rem; color: var(--muted);">
-                                    <?php echo date('M j', strtotime($msg['created_at'])); ?>
-                                </td>
-                                <td>
-                                    <?php if (!$msg['is_read']): ?>
-                                        <a href="messages.php?mark_read=<?php echo $msg['id']; ?>" class="action-btn btn-view"
-                                            title="Mark Read"><i class="ri-check-line"></i></a>
-                                    <?php endif; ?>
-                                    <a href="messages.php?delete=<?php echo $msg['id']; ?>" class="action-btn btn-delete"
-                                        onclick="return confirm('Delete message?')" title="Delete"><i
-                                            class="ri-delete-bin-line"></i></a>
+                                <td data-label="Actions">
+                                    <div style="display: flex; gap: 0.75rem;">
+                                        <?php if (!$msg['is_read']): ?>
+                                            <a href="messages.php?mark_read=<?php echo $msg['id']; ?>" class="btn btn-secondary"
+                                                style="padding: 0.5rem; border-radius: 10px;" title="Mark as Read">
+                                                <i class="ri-mail-open-line"></i>
+                                            </a>
+                                        <?php endif; ?>
+                                        <a href="messages.php?delete=<?php echo $msg['id']; ?>" class="btn"
+                                            style="padding: 0.5rem; border-radius: 10px; background: rgba(255,107,107,0.1); color: #ff6b6b;"
+                                            onclick="return confirm('Archive this message permanently?')" title="Delete">
+                                            <i class="ri-delete-bin-7-line"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             <?php else: ?>
-                <div style="text-align: center; padding: 3rem; color: var(--muted);">No messages found.</div>
+                <div style="text-align: center; padding: 5rem 2rem;">
+                    <i class="ri-chat-history-line"
+                        style="font-size: 3rem; color: var(--muted); opacity: 0.3; display: block; margin-bottom: 1rem;"></i>
+                    <p style="color: var(--muted); font-weight: 500;">Your inbox is currently empty.</p>
+                </div>
             <?php endif; ?>
         </div>
     </main>
 </div>
+</body>
+
+</html>
 </body>
 
 </html>

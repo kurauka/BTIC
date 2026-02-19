@@ -30,118 +30,86 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_password'])) {
 include 'includes/header.php';
 ?>
 
-<style>
-    /* Reusing dashboard styles + specific ones */
-    .dashboard-wrapper {
-        display: flex;
-        min-height: 100vh;
-    }
-
-    .sidebar {
-        width: 260px;
-        background: rgba(5, 13, 26, 0.9);
-        border-right: 1px solid var(--border);
-        padding: 2rem 1.5rem;
-        display: flex;
-        flex-direction: column;
-        position: fixed;
-        height: 100vh;
-    }
-
-    .main-content {
-        flex: 1;
-        margin-left: 260px;
-        padding: 2rem;
-    }
-
-    /* Sidebar Links (Shared) */
-    .menu-label {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        color: var(--muted);
-        margin-bottom: 1rem;
-        margin-top: 2rem;
-    }
-
-    .menu-link {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.75rem 1rem;
-        color: var(--white);
-        text-decoration: none;
-        border-radius: 8px;
-        margin-bottom: 0.5rem;
-        transition: all 0.3s;
-    }
-
-    .menu-link:hover,
-    .menu-link.active {
-        background: rgba(0, 201, 167, 0.1);
-        color: var(--teal);
-    }
-
-    .content-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 2rem;
-        max-width: 600px;
-    }
-</style>
-
 <div class="dashboard-wrapper">
     <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="login-logo" style="justify-content: flex-start; margin-bottom: 0;">
-            <i class="ri-anchor-line" style="color:var(--teal)"></i> BTIC<span>.</span>
-        </div>
-        <div class="menu-label">Main</div>
-        <a href="index.php" class="menu-link"><i class="ri-dashboard-line"></i> Dashboard</a>
-        <a href="projects.php" class="menu-link"><i class="ri-folder-line"></i> Projects</a>
-        <a href="events.php" class="menu-link"><i class="ri-calendar-event-line"></i> Events</a>
-        <a href="messages.php" class="menu-link"><i class="ri-mail-line"></i> Messages</a>
-        <div class="menu-label">System</div>
-        <a href="settings.php" class="menu-link active"><i class="ri-settings-line"></i> Settings</a>
-        <a href="logout.php" class="menu-link" style="margin-top: auto; color: var(--error);"><i
-                class="ri-logout-box-line"></i> Logout</a>
-    </aside>
+    <?php include 'includes/sidebar.php'; ?>
 
     <main class="main-content">
-        <div class="top-bar">
-            <div>
-                <h1 class="section-title" style="font-size: 1.8rem; margin: 0;">Settings</h1>
-                <p style="color: var(--muted); margin-top: 0.5rem;">Manage your account</p>
-            </div>
-        </div>
+        <header class="page-header" style="margin-bottom: 3rem;">
+            <h1 class="section-title">Security & Configuration</h1>
+            <p class="section-subtitle">Credential management and system-wide administrative overrides.</p>
+        </header>
 
-        <?php if (isset($success)): ?>
-            <div class="alert"
-                style="background: rgba(0,201,167,0.1); color: var(--teal); border: 1px solid rgba(0,201,167,0.2); margin-bottom: 1rem; max-width: 600px;">
-                <?php echo htmlspecialchars($success); ?>
-            </div>
-        <?php endif; ?>
-        <?php if (isset($error)): ?>
-            <div class="alert alert-error" style="margin-bottom: 1rem; max-width: 600px;">
-                <?php echo htmlspecialchars($error); ?>
-            </div>
-        <?php endif; ?>
+        <div style="max-width: 650px;">
+            <?php if (isset($success)): ?>
+                <div class="glass-card"
+                    style="padding: 1rem 1.5rem; margin-bottom: 2rem; border-color: var(--teal); background: rgba(0, 201, 167, 0.05); color: var(--teal); display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="ri-shield-check-line"></i>
+                    <?php echo htmlspecialchars($success); ?>
+                </div>
+            <?php endif; ?>
 
-        <div class="content-card">
-            <h3 style="margin-bottom: 1.5rem; color: var(--white);">Change Password</h3>
-            <form method="POST">
-                <input type="hidden" name="update_password" value="1">
-                <div class="form-group">
-                    <label class="form-label">New Password</label>
-                    <input type="password" name="new_password" class="form-input" required>
+            <?php if (isset($error)): ?>
+                <div class="glass-card"
+                    style="padding: 1rem 1.5rem; margin-bottom: 2rem; border-color: #ff6b6b; background: rgba(255, 107, 107, 0.05); color: #ff6b6b; display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="ri-error-warning-line"></i>
+                    <?php echo htmlspecialchars($error); ?>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Confirm New Password</label>
-                    <input type="password" name="confirm_password" class="form-input" required>
+            <?php endif; ?>
+
+            <div class="glass-card" style="padding: 2.5rem;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                    <div
+                        style="width: 45px; height: 45px; background: rgba(56, 189, 248, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--sky); border: 1px solid rgba(56, 189, 248, 0.2);">
+                        <i class="ri-lock-password-line" style="font-size: 1.25rem;"></i>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--white); margin: 0;">Authenticator
+                            Update</h3>
+                        <p style="color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem;">Ensure your
+                            administrative access remains resilient.</p>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Update Password</button>
-            </form>
+
+                <form method="POST">
+                    <input type="hidden" name="update_password" value="1">
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label"
+                            style="display: block; margin-bottom: 0.75rem; color: var(--muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">New
+                            Administrative Cipher</label>
+                        <input type="password" name="new_password" class="form-input" required
+                            placeholder="Enter complex password..."
+                            style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 12px; color: var(--white); font-family: inherit; transition: all 0.3s ease;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 2rem;">
+                        <label class="form-label"
+                            style="display: block; margin-bottom: 0.75rem; color: var(--muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;">Validate
+                            Cipher</label>
+                        <input type="password" name="confirm_password" class="form-input" required
+                            placeholder="Redundant verification..."
+                            style="width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 12px; color: var(--white); font-family: inherit; transition: all 0.3s ease;">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; padding: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'Syne', sans-serif;">
+                        Commit Security Update
+                    </button>
+                </form>
+            </div>
+
+            <div class="glass-card" style="margin-top: 2rem; padding: 2rem; border-style: dashed; opacity: 0.8;">
+                <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                    <i class="ri-information-line"
+                        style="color: var(--accent); font-size: 1.25rem; margin-top: 0.1rem;"></i>
+                    <div style="font-size: 0.85rem; color: var(--muted); line-height: 1.6;">
+                        <strong style="color: var(--white); display: block; margin-bottom: 0.4rem;">Administrative
+                            Guidelines:</strong>
+                        Ciphers should exceed 12 characters, including a combination of alphanumeric symbols and
+                        specialized character tokens. Frequent updates mitigate vector rotation risks.
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 </div>

@@ -42,231 +42,66 @@ $programs = $conn->query("SELECT * FROM programs ORDER BY display_order ASC, id 
 include 'includes/header.php';
 ?>
 
-<style>
-    /* Reusing dashboard styles + specific ones */
-    .dashboard-wrapper {
-        display: flex;
-        min-height: 100vh;
-    }
-
-    .sidebar {
-        width: 260px;
-        background: rgba(5, 13, 26, 0.9);
-        border-right: 1px solid var(--border);
-        padding: 2rem 1.5rem;
-        display: flex;
-        flex-direction: column;
-        position: fixed;
-        height: 100vh;
-    }
-
-    .main-content {
-        flex: 1;
-        margin-left: 260px;
-        padding: 2rem;
-    }
-
-    /* Sidebar Links (Shared) */
-    .menu-label {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        color: var(--muted);
-        margin-bottom: 1rem;
-        margin-top: 2rem;
-    }
-
-    .menu-link {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.75rem 1rem;
-        color: var(--white);
-        text-decoration: none;
-        border-radius: 8px;
-        margin-bottom: 0.5rem;
-        transition: all 0.3s;
-    }
-
-    .menu-link:hover,
-    .menu-link.active {
-        background: rgba(0, 201, 167, 0.1);
-        color: var(--teal);
-    }
-
-    /* Table & Forms */
-    .content-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 2rem;
-        overflow: hidden;
-    }
-
-    .data-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 1rem;
-    }
-
-    .data-table th {
-        text-align: left;
-        padding: 1rem;
-        color: var(--muted);
-        border-bottom: 1px solid var(--border);
-        font-weight: 600;
-    }
-
-    .data-table td {
-        padding: 1rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        color: var(--white);
-        vertical-align: middle;
-    }
-
-    .data-table tr:last-child td {
-        border-bottom: none;
-    }
-
-    .action-btn {
-        padding: 0.4rem 0.8rem;
-        border-radius: 4px;
-        font-size: 0.8rem;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.3rem;
-        transition: all 0.2s;
-    }
-
-    .btn-edit {
-        background: rgba(56, 189, 248, 0.15);
-        color: var(--sky);
-    }
-
-    .btn-delete {
-        background: rgba(255, 77, 79, 0.15);
-        color: var(--error);
-    }
-
-    .btn-edit:hover {
-        background: rgba(56, 189, 248, 0.25);
-    }
-
-    .btn-delete:hover {
-        background: rgba(255, 77, 79, 0.25);
-    }
-
-    /* Form */
-    .modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.8);
-        z-index: 1000;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        backdrop-filter: blur(5px);
-    }
-
-    .modal-overlay.active {
-        display: flex;
-    }
-
-    .modal {
-        background: #0a1625;
-        width: 100%;
-        max-width: 500px;
-        padding: 2rem;
-        border-radius: 12px;
-        border: 1px solid var(--border);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    }
-
-    .modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-    }
-
-    .close-modal {
-        background: none;
-        border: none;
-        color: var(--muted);
-        font-size: 1.5rem;
-        cursor: pointer;
-    }
-</style>
-
 <div class="dashboard-wrapper">
     <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="login-logo" style="justify-content: flex-start; margin-bottom: 0;">
-            <i class="ri-anchor-line" style="color:var(--teal)"></i> BTIC<span>.</span>
-        </div>
-        <div class="menu-label">Main</div>
-        <a href="index.php" class="menu-link"><i class="ri-dashboard-line"></i> Dashboard</a>
-        <a href="projects.php" class="menu-link"><i class="ri-folder-line"></i> Projects</a>
-        <a href="programs.php" class="menu-link active"><i class="ri-code-s-slash-line"></i> Programs</a>
-        <a href="events.php" class="menu-link"><i class="ri-calendar-event-line"></i> Events</a>
-        <a href="messages.php" class="menu-link"><i class="ri-mail-line"></i> Messages</a>
-        <div class="menu-label">System</div>
-        <a href="settings.php" class="menu-link"><i class="ri-settings-line"></i> Settings</a>
-        <a href="logout.php" class="menu-link" style="margin-top: auto; color: var(--error);"><i
-                class="ri-logout-box-line"></i> Logout</a>
-    </aside>
+    <?php include 'includes/sidebar.php'; ?>
 
     <main class="main-content">
-        <div class="top-bar">
+        <header class="page-header"
+            style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem;">
             <div>
-                <h1 class="section-title" style="font-size: 1.8rem; margin: 0;">Programs</h1>
-                <p style="color: var(--muted); margin-top: 0.5rem;">Core activities and workshops</p>
+                <h1 class="section-title">Academic Programs</h1>
+                <p class="section-subtitle">Curate and refine the core initiatives and workshop curricula.</p>
             </div>
             <button class="btn btn-primary" onclick="openModal()">
-                <i class="ri-add-line"></i> Add Program
+                <i class="ri-code-box-line"></i> Initialize Program
             </button>
-        </div>
+        </header>
 
         <?php if (isset($_GET['msg'])): ?>
-            <div class="alert"
-                style="background: rgba(0,201,167,0.1); color: var(--teal); border: 1px solid rgba(0,201,167,0.2);">
+            <div class="glass-card"
+                style="padding: 1rem 1.5rem; margin-bottom: 2rem; border-color: var(--teal); background: rgba(0, 201, 167, 0.05); color: var(--teal); display: flex; align-items: center; gap: 0.75rem;">
+                <i class="ri-checkbox-circle-line"></i>
                 <?php echo htmlspecialchars($_GET['msg']); ?>
             </div>
         <?php endif; ?>
 
-        <div class="content-card">
-            <table class="data-table">
+        <div class="glass-card" style="padding: 0; overflow: hidden;">
+            <table class="premium-table">
                 <thead>
                     <tr>
-                        <th width="80">Icon</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th width="150">Actions</th>
+                        <th width="80">Symbol</th>
+                        <th>Program Designation</th>
+                        <th>Curriculum Overview</th>
+                        <th width="140">Control</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($programs as $prog): ?>
                         <tr>
-                            <td>
-                                <div style="font-size: 1.5rem; color: var(--teal);">
-                                    <i class="<?php echo htmlspecialchars($prog['icon_class'] ?: 'ri-code-line'); ?>"></i>
+                            <td data-label="Symbol">
+                                <div
+                                    style="width: 45px; height: 45px; background: rgba(0, 201, 167, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--teal); border: 1px solid rgba(0, 201, 167, 0.2);">
+                                    <i class="<?php echo htmlspecialchars($prog['icon_class'] ?: 'ri-code-line'); ?>"
+                                        style="font-size: 1.25rem;"></i>
                                 </div>
                             </td>
-                            <td>
-                                <div style="font-weight: 600;">
-                                    <?php echo htmlspecialchars($prog['title']); ?>
-                                </div>
+                            <td data-label="Designation">
+                                <div style="font-weight: 700; color: var(--white); font-size: 1.1rem;">
+                                    <?php echo htmlspecialchars($prog['title']); ?></div>
                             </td>
-                            <td>
-                                <div style="font-size: 0.85rem; color: var(--muted);">
-                                    <?php echo substr(htmlspecialchars($prog['description']), 0, 80) . '...'; ?>
-                                </div>
+                            <td data-label="Overview" style="color: var(--muted); line-height: 1.5; font-size: 0.9rem;">
+                                <?php echo substr(htmlspecialchars($prog['description']), 0, 100) . '...'; ?>
                             </td>
-                            <td>
-                                <a href="#" class="action-btn btn-edit"><i class="ri-pencil-line"></i></a>
-                                <a href="programs.php?delete=<?php echo $prog['id']; ?>" class="action-btn btn-delete"
-                                    onclick="return confirm('Are you sure?')"><i class="ri-delete-bin-line"></i></a>
+                            <td data-label="Control">
+                                <div style="display: flex; gap: 0.75rem;">
+                                    <a href="#" class="btn btn-secondary" style="padding: 0.5rem; border-radius: 10px;"
+                                        title="Modify Syllabus"><i class="ri-terminal-window-line"></i></a>
+                                    <a href="programs.php?delete=<?php echo $prog['id']; ?>" class="btn"
+                                        style="padding: 0.5rem; border-radius: 10px; background: rgba(255,107,107,0.1); color: #ff6b6b;"
+                                        onclick="return confirm('Decommission this academic program?')" title="Delete"><i
+                                            class="ri-rest-time-line"></i></a>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -276,29 +111,73 @@ include 'includes/header.php';
     </main>
 </div>
 
-<!-- Add Program Modal -->
+<!-- Initialization Modal -->
+<style>
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(15px);
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: all 0.4s ease;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+        opacity: 1;
+    }
+
+    .modal-content-glass {
+        width: 100%;
+        max-width: 550px;
+        transform: scale(0.9);
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal-overlay.active .modal-content-glass {
+        transform: scale(1);
+    }
+</style>
+
 <div class="modal-overlay" id="programModal">
-    <div class="modal">
-        <div class="modal-header">
-            <h3>Add New Program</h3>
-            <button class="close-modal" onclick="closeModal()"><i class="ri-close-line"></i></button>
-        </div>
+    <div class="glass-card modal-content-glass">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h3 style="font-size: 1.5rem;">Initialize Initiative</h3>
+            <button onclick="closeModal()"
+                style="background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.5rem;">
+                <i class="ri-close-circle-line"></i>
+            </button>
+        </header>
+
         <form method="POST">
             <input type="hidden" name="add_program" value="1">
             <div class="form-group">
-                <label class="form-label">Program Title</label>
-                <input type="text" name="title" class="form-input" required>
+                <label class="form-label">Program Designation</label>
+                <input type="text" name="title" class="form-input" required
+                    placeholder="e.g. Advanced Cybersecurity Workshop">
             </div>
+
             <div class="form-group">
-                <label class="form-label">Icon Class (Remix Icon)</label>
-                <input type="text" name="icon_class" class="form-input" placeholder="ri-code-line">
-                <small style="color: var(--muted); font-size: 0.8rem;">e.g., ri-robot-line, ri-computer-line</small>
+                <label class="form-label">Remix Icon Blueprint</label>
+                <input type="text" name="icon_class" class="form-input" placeholder="ri-shield-flash-line">
+                <small style="color: var(--muted); font-size: 0.8rem; margin-top: 0.5rem; display: block;">Visit
+                    [remixicon.com](https://remixicon.com) for available glyphs.</small>
             </div>
+
             <div class="form-group">
-                <label class="form-label">Description</label>
-                <textarea name="description" class="form-input" rows="4" required></textarea>
+                <label class="form-label">Syllabus Overview</label>
+                <textarea name="description" class="form-input" rows="4" required
+                    placeholder="Detail the technical objectives, technologies involved, and expected learning outcomes..."></textarea>
             </div>
-            <button type="submit" class="btn btn-primary" style="width: 100%;">Create Program</button>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <button type="button" onclick="closeModal()" class="btn btn-secondary" style="flex: 1;">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="flex: 2;">Commit Initiative</button>
+            </div>
         </form>
     </div>
 </div>

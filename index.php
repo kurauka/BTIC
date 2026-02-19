@@ -1431,20 +1431,24 @@
 
     /* ===== MOBILE NAV ===== */
     .mobile-menu {
-      display: none;
       position: fixed;
       inset: 0;
       background: rgba(5, 13, 26, 0.97);
       backdrop-filter: blur(20px);
-      z-index: 99;
+      z-index: 200;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 2rem;
+      display: flex;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+      visibility: hidden;
     }
 
     .mobile-menu.open {
-      display: flex;
+      transform: translateX(0);
+      visibility: visible;
     }
 
     .mobile-menu a {
@@ -1530,6 +1534,7 @@
       .hero-grid {
         grid-template-columns: 1fr;
         text-align: center;
+        position: relative;
       }
 
       .hero-sub {
@@ -1538,6 +1543,21 @@
 
       .hero-btns {
         justify-content: center;
+      }
+
+      .hero-visual {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        opacity: 0.15;
+        pointer-events: none;
+      }
+
+      .hero-left {
+        position: relative;
+        z-index: 1;
       }
 
       .globe-container {
@@ -1581,6 +1601,17 @@
     }
 
     @media (max-width: 768px) {
+
+      section,
+      #about .section-wrap,
+      #programs .section-wrap,
+      #events .section-wrap,
+      #organizers .section-wrap,
+      #contact {
+        padding-top: 4rem !important;
+        padding-bottom: 4rem !important;
+      }
+
       .nav-links {
         display: none;
       }
@@ -1625,6 +1656,26 @@
       .footer-links {
         flex-wrap: wrap;
         justify-content: center;
+        gap: 1rem;
+      }
+
+      .mobile-menu a {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-btns {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .hero-h1 {
+        font-size: 2.2rem;
       }
     }
   </style>
@@ -1686,7 +1737,8 @@
           the blue economy.
         </p>
         <div class="hero-btns reveal delay-5">
-          <a href="#contact" class="btn btn-primary"><i class="ri-rocket-2-line"></i> Join the Club</a>
+          <a href="#" onclick="openJoinModal(event)" class="btn btn-primary"><i class="ri-rocket-2-line"></i> Join the
+            Club</a>
           <a href="#programs" class="btn btn-secondary"><i class="ri-lightbulb-line"></i> Explore Projects</a>
           <a href="#events" class="btn btn-outline"><i class="ri-calendar-event-line"></i> Upcoming Events</a>
         </div>
@@ -1942,7 +1994,8 @@
           pioneering the next wave of change for the blue economy.
         </p>
         <div class="join-btns">
-          <a href="#contact" class="btn btn-primary"><i class="ri-edit-circle-line"></i> Register as a Member</a>
+          <a href="#" onclick="openJoinModal(event)" class="btn btn-primary"><i class="ri-edit-circle-line"></i>
+            Register as a Member</a>
           <a href="#contact" class="btn btn-secondary"><i class="ri-hand-heart-line"></i> Partner with Us</a>
           <a href="#contact" class="btn btn-outline"><i class="ri-mail-send-line"></i> Contact Us</a>
         </div>
@@ -2116,12 +2169,10 @@
             while ($p = $part_stmt->fetch(PDO::FETCH_ASSOC)) {
               ?>
               <a href="<?php echo htmlspecialchars($p['website_url']); ?>" target="_blank" class="reveal delay-2"
-                style="opacity: 0.6; transition: all 0.3s; filter: grayscale(100%);"
-                onmouseover="this.style.opacity='1'; this.style.filter='none'"
-                onmouseout="this.style.opacity='0.6'; this.style.filter='grayscale(100%)'">
+                style="transition: all 0.3s;">
                 <?php if ($p['logo_url']): ?>
                   <img src="<?php echo htmlspecialchars($p['logo_url']); ?>" alt="<?php echo htmlspecialchars($p['name']); ?>"
-                    style="height: 50px; max-width: 150px; object-fit: contain;">
+                    style="height: 100px; max-width: 250px; object-fit: contain;">
                 <?php else: ?>
                   <h4 style="color: var(--white); font-weight: 700; font-size: 1.5rem; margin: 0;">
                     <?php echo htmlspecialchars($p['name']); ?>
@@ -2255,6 +2306,124 @@
     </div>
   </footer>
 
+  <!-- ===== MEMBERSHIP MODAL ===== -->
+  <div id="membershipModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2 style="font-family: 'Syne', sans-serif; color: var(--teal); margin-bottom: 0.5rem;">Join the Club</h2>
+      <p style="color: var(--muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Become a member of the Bandari Tech &
+        Innovation Club.</p>
+
+      <form action="submit_join.php" method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="full_name">Full Name</label>
+            <input type="text" id="full_name" name="full_name" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="join_email">Email Address</label>
+          <input type="email" id="join_email" name="email" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="institution">Institution</label>
+            <input type="text" id="institution" name="institution" value="Bandari Maritime Academy" required>
+          </div>
+          <div class="form-group">
+            <label for="course">Course / Department</label>
+            <input type="text" id="course" name="course" placeholder="e.g. Marine Engineering" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="year_of_study">Year of Study</label>
+          <select id="year_of_study" name="year_of_study" required>
+            <option value="">Select Year...</option>
+            <option value="Year 1">Year 1</option>
+            <option value="Year 2">Year 2</option>
+            <option value="Year 3">Year 3</option>
+            <option value="Year 4">Year 4</option>
+            <option value="Staff/Faculty">Staff / Faculty</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="interests">Technical Interests (Select all that apply)</label>
+          <input type="text" id="interests" name="interests" placeholder="e.g. Coding, IoT, Robotics, Design..."
+            required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+          Submit Application
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <style>
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(5, 13, 26, 0.9);
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      background-color: var(--deep);
+      margin: 5% auto;
+      padding: 2.5rem;
+      border: 1px solid var(--teal);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 0 50px rgba(0, 201, 167, 0.15);
+      position: relative;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .close-modal {
+      color: var(--muted);
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .close-modal:hover,
+    .close-modal:focus {
+      color: var(--teal);
+      text-decoration: none;
+    }
+  </style>
+
   <script>
     // ===== CUSTOM CURSOR =====
     const cursor = document.getElementById('cursor');
@@ -2365,21 +2534,6 @@
     }, { threshold: 0.12 });
     revealEls.forEach(el => io.observe(el));
 
-    // ===== FORM SUBMIT =====
-    function handleSubmit(btn) {
-      const original = btn.innerHTML;
-      btn.innerHTML = '✓ Message Sent!';
-      btn.style.background = '#4ade80';
-      btn.style.color = '#0a2040';
-      btn.disabled = true;
-      setTimeout(() => {
-        btn.innerHTML = original;
-        btn.style.background = '';
-        btn.style.color = '';
-        btn.disabled = false;
-      }, 3000);
-    }
-
     // ===== ANIMATED COUNTER =====
     function animateCounter(el, target, suffix = '') {
       let current = 0;
@@ -2404,6 +2558,29 @@
       });
     }, { threshold: 0.5 });
     countEls.forEach(el => counterIO.observe(el));
+
+    // ===== MEMBERSHIP MODAL LOGIC =====
+    const modal = document.getElementById("membershipModal");
+    const closeBtn = document.getElementsByClassName("close-modal")[0];
+
+    // Open modal on specific buttons
+    // We attach this to any link with class 'open-join-modal'
+    function openJoinModal(e) {
+      if (e) e.preventDefault();
+      modal.style.display = "block";
+    }
+
+    // Close on X
+    closeBtn.onclick = function () {
+      modal.style.display = "none";
+    }
+
+    // Close on click outside
+    window.onclick = function (event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
   </script>
 </body>
 
