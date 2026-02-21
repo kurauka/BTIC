@@ -35,6 +35,15 @@ if (isset($_GET['reject'])) {
     exit;
 }
 
+// Handle Bulk Approve
+if (isset($_GET['approve_all'])) {
+    $stmt = $conn->prepare("UPDATE membership_requests SET status = 'approved' WHERE status = 'pending'");
+    $stmt->execute();
+    $count = $stmt->rowCount();
+    header("Location: membership.php?msg=" . $count . " members approved successfully");
+    exit;
+}
+
 // Search and Filter logic
 $search = $_GET['search'] ?? '';
 $status_filter = $_GET['status'] ?? '';
@@ -71,9 +80,21 @@ include 'includes/header.php';
                 <p class="section-subtitle">Manage new students and professionals who wish to join Bandari Tech &
                     Innovation Club.</p>
             </div>
-            <a href="export_members.php" class="btn btn-secondary">
-                <i class="ri-download-2-line"></i> Export CSV
-            </a>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <?php
+                $pending_count = $conn->query("SELECT COUNT(*) FROM membership_requests WHERE status = 'pending'")->fetchColumn();
+                if ($pending_count > 0):
+                    ?>
+                    <a href="membership.php?approve_all=1" class="btn btn-primary"
+                        style="background: linear-gradient(135deg, #00ff88, #00c9a7); color: #050812;"
+                        onclick="return confirm('Are you sure you want to approve ALL <?php echo $pending_count; ?> pending applications?')">
+                        <i class="ri-check-double-line"></i> Approve All Pending (<?php echo $pending_count; ?>)
+                    </a>
+                <?php endif; ?>
+                <a href="export_members.php" class="btn btn-secondary">
+                    <i class="ri-download-2-line"></i> Export CSV
+                </a>
+            </div>
         </header>
 
         <!-- Search & Filter Bar -->
