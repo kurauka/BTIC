@@ -2427,6 +2427,93 @@
       color: var(--teal);
       text-decoration: none;
     }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      top: 100px;
+      right: 2rem;
+      z-index: 10001;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: var(--card-bg);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--teal);
+      border-left: 5px solid var(--teal);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      color: var(--white);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      min-width: 300px;
+      max-width: 450px;
+      animation: toastIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      pointer-events: auto;
+    }
+
+    .toast.error {
+      border-color: #ff6b6b;
+      border-left-color: #ff6b6b;
+    }
+
+    .toast i {
+      font-size: 1.5rem;
+    }
+
+    .toast.success i {
+      color: var(--teal);
+    }
+
+    .toast.error i {
+      color: #ff6b6b;
+    }
+
+    .toast-content {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .toast-msg {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    @keyframes toastIn {
+      from {
+        transform: translateX(120%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes toastOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      to {
+        transform: translateX(120%);
+        opacity: 0;
+      }
+    }
   </style>
 
   <script>
@@ -2586,7 +2673,49 @@
         modal.style.display = "none";
       }
     }
+
+    // ===== TOAST NOTIFICATION LOGIC =====
+    function showToast(status, message) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${status}`;
+
+      const icon = status === 'success' ? 'ri-checkbox-circle-line' : 'ri-error-warning-line';
+      const title = status === 'success' ? 'Brilliant!' : 'Attention';
+
+      toast.innerHTML = `
+        <i class="${icon}"></i>
+        <div class="toast-content">
+          <div class="toast-title">${title}</div>
+          <div class="toast-msg">${message}</div>
+        </div>
+        <i class="ri-close-line" style="cursor: pointer; font-size: 1rem; opacity: 0.5;" onclick="this.parentElement.remove()"></i>
+      `;
+
+      container.appendChild(toast);
+
+      // Auto remove after 5 seconds
+      setTimeout(() => {
+        toast.style.animation = 'toastOut 0.5s forwards';
+        setTimeout(() => toast.remove(), 500);
+      }, 5000);
+    }
+
+    // Check for status in URL
+    const urlParamsSearch = new URLSearchParams(window.location.search);
+    const status = urlParamsSearch.get('status');
+    const msg = urlParamsSearch.get('message');
+
+    if (status && msg) {
+      showToast(status, msg);
+      // Clean up URL
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
+    }
   </script>
+
+  <!-- ===== TOAST NOTIFICATION ===== -->
+  <div id="toastContainer" class="toast-container"></div>
 </body>
 
 </html>
