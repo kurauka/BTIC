@@ -2702,16 +2702,19 @@
     }
 
     // Check for status in URL
-    const urlParamsSearch = new URLSearchParams(window.location.search);
-    const status = urlParamsSearch.get('status');
-    const msg = urlParamsSearch.get('message');
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParamsSearch = new URLSearchParams(window.location.search);
+      const status = urlParamsSearch.get('status');
+      const msg = urlParamsSearch.get('message');
 
-    if (status && msg) {
-      showToast(status, msg);
-      // Clean up URL
-      const newUrl = window.location.pathname;
-      window.history.replaceState({}, document.title, newUrl);
-    }
+      if (status && msg) {
+        showToast(status, msg);
+        // Clean up URL
+        const newUrl = window.location.pathnam
+     e;
+        window.history.replaceState({}, document.title, newUrl);
+      }
+    });
   </script>
 
   <!-- ===== TOAST NOTIFICATION ===== -->
