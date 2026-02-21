@@ -147,33 +147,9 @@ include 'includes/header.php';
 
 <!-- Onboarding Modal -->
 <style>
-    .modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.85);
-        backdrop-filter: blur(15px);
-        z-index: 2000;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: all 0.4s ease;
-    }
-
-    .modal-overlay.active {
-        display: flex;
-        opacity: 1;
-    }
-
     .modal-content-glass {
         width: 100%;
         max-width: 500px;
-        transform: scale(0.9);
-        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .modal-overlay.active .modal-content-glass {
-        transform: scale(1);
     }
 </style>
 

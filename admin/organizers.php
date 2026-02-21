@@ -70,112 +70,91 @@ include 'includes/header.php';
     <?php include 'includes/sidebar.php'; ?>
 
     <main class="main-content">
-        <header class="page-header"
-            style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem;">
-            <div>
-                <h1 class="section-title">Leadership Council</h1>
-                <p class="section-subtitle">Manage the dedicated individuals steering the club's vision.</p>
-            </div>
-            <button class="btn btn-primary" onclick="openModal()">
-                <i class="ri-user-add-line"></i> Appoint Member
-            </button>
-        </header>
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <header class="page-header"
+                style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem;">
+                <div>
+                    <h1 class="section-title">Leadership Council</h1>
+                    <p class="section-subtitle">Manage the dedicated individuals steering the club's vision.</p>
+                </div>
+                <button class="btn btn-primary" onclick="openModal()">
+                    <i class="ri-user-add-line"></i> Appoint Member
+                </button>
+            </header>
 
-        <?php if (isset($_GET['msg'])): ?>
-            <div class="glass-card"
-                style="padding: 1rem 1.5rem; margin-bottom: 2rem; border-color: var(--teal); background: rgba(0, 201, 167, 0.05); color: var(--teal); display: flex; align-items: center; gap: 0.75rem;">
-                <i class="ri-checkbox-circle-line"></i>
-                <?php echo htmlspecialchars($_GET['msg']); ?>
-            </div>
-        <?php endif; ?>
+            <?php if (isset($_GET['msg'])): ?>
+                <div class="glass-card"
+                    style="padding: 1rem 1.5rem; margin-bottom: 2rem; border-color: var(--teal); background: rgba(0, 201, 167, 0.05); color: var(--teal); display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="ri-checkbox-circle-line"></i>
+                    <?php echo htmlspecialchars($_GET['msg']); ?>
+                </div>
+            <?php endif; ?>
 
-        <div class="glass-card" style="padding: 0; overflow: hidden;">
-            <table class="premium-table">
-                <thead>
-                    <tr>
-                        <th width="80">Avatar</th>
-                        <th>Professional Identity</th>
-                        <th>Functional Role</th>
-                        <th>Biography</th>
-                        <th width="140">Control</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($organizers as $org): ?>
+            <div class="glass-card" style="padding: 0; overflow: hidden;">
+                <table class="premium-table">
+                    <thead>
                         <tr>
-                            <td data-label="Avatar">
-                                <div
-                                    style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; border: 2px solid var(--border); background: var(--bg-deep);">
-                                    <?php if ($org['image_url']): ?>
-                                        <img src="<?php echo htmlspecialchars($org['image_url']); ?>"
-                                            style="width: 100%; height: 100%; object-fit: cover;">
-                                    <?php else: ?>
-                                        <div
-                                            style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--muted);">
-                                            <i class="ri-user-3-line" style="font-size: 1.2rem;"></i>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                            </td>
-                            <td data-label="Identity">
-                                <div style="font-weight: 700; color: var(--white);">
-                                    <?php echo htmlspecialchars($org['name']); ?>
-                                </div>
-                            </td>
-                            <td data-label="Role">
-                                <span class="badge badge-accent"
-                                    style="text-transform: uppercase; letter-spacing: 0.05em;"><?php echo htmlspecialchars($org['role']); ?></span>
-                            </td>
-                            <td data-label="Biography" style="color: var(--muted); font-size: 0.9rem; line-height: 1.5;">
-                                <?php echo substr(htmlspecialchars($org['bio']), 0, 90) . '...'; ?>
-                            </td>
-                            <td data-label="Control">
-                                <div style="display: flex; gap: 0.75rem;">
-                                    <a href="#" class="btn btn-secondary" style="padding: 0.5rem; border-radius: 10px;"
-                                        title="Edit Profile"><i class="ri-edit-2-line"></i></a>
-                                    <a href="organizers.php?delete=<?php echo $org['id']; ?>" class="btn"
-                                        style="padding: 0.5rem; border-radius: 10px; background: rgba(255,107,107,0.1); color: #ff6b6b;"
-                                        onclick="return confirm('Remove this member from the leadership council?')"
-                                        title="Remove"><i class="ri-user-unfollow-line"></i></a>
-                                </div>
-                            </td>
+                            <th width="80">Avatar</th>
+                            <th>Professional Identity</th>
+                            <th>Functional Role</th>
+                            <th>Biography</th>
+                            <th width="140">Control</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($organizers as $org): ?>
+                            <tr>
+                                <td data-label="Avatar">
+                                    <div
+                                        style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; border: 2px solid var(--border); background: var(--bg-deep);">
+                                        <?php if ($org['image_url']): ?>
+                                            <img src="<?php echo htmlspecialchars($org['image_url']); ?>"
+                                                style="width: 100%; height: 100%; object-fit: cover;">
+                                        <?php else: ?>
+                                            <div
+                                                style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--muted);">
+                                                <i class="ri-user-3-line" style="font-size: 1.2rem;"></i>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </td>
+                                <td data-label="Identity">
+                                    <div style="font-weight: 700; color: var(--white);">
+                                        <?php echo htmlspecialchars($org['name']); ?>
+                                    </div>
+                                </td>
+                                <td data-label="Role">
+                                    <span class="badge badge-accent"
+                                        style="text-transform: uppercase; letter-spacing: 0.05em;"><?php echo htmlspecialchars($org['role']); ?></span>
+                                </td>
+                                <td data-label="Biography"
+                                    style="color: var(--muted); font-size: 0.9rem; line-height: 1.5;">
+                                    <?php echo substr(htmlspecialchars($org['bio']), 0, 90) . '...'; ?>
+                                </td>
+                                <td data-label="Control">
+                                    <div style="display: flex; gap: 0.75rem;">
+                                        <a href="#" class="btn btn-secondary" style="padding: 0.5rem; border-radius: 10px;"
+                                            title="Edit Profile"><i class="ri-edit-2-line"></i></a>
+                                        <a href="organizers.php?delete=<?php echo $org['id']; ?>" class="btn"
+                                            style="padding: 0.5rem; border-radius: 10px; background: rgba(255,107,107,0.1); color: #ff6b6b;"
+                                            onclick="return confirm('Remove this member from the leadership council?')"
+                                            title="Remove"><i class="ri-user-unfollow-line"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
 </div>
 
 <!-- Appointment Modal -->
 <style>
-    .modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.85);
-        backdrop-filter: blur(15px);
-        z-index: 2000;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: all 0.4s ease;
-    }
-
-    .modal-overlay.active {
-        display: flex;
-        opacity: 1;
-    }
-
     .modal-content-glass {
         width: 100%;
         max-width: 550px;
-        transform: scale(0.9);
-        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .modal-overlay.active .modal-content-glass {
-        transform: scale(1);
     }
 </style>
 

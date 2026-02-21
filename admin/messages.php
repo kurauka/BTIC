@@ -59,9 +59,11 @@ include 'includes/header.php';
                             <tr style="<?php echo $msg['is_read'] ? 'opacity: 0.65;' : ''; ?>">
                                 <td data-label="Correspondent">
                                     <div style="font-weight: 700; color: var(--white);">
-                                        <?php echo htmlspecialchars($msg['first_name'] . ' ' . $msg['last_name']); ?></div>
+                                        <?php echo htmlspecialchars($msg['first_name'] . ' ' . $msg['last_name']); ?>
+                                    </div>
                                     <div style="font-size: 0.8rem; color: var(--muted); margin-top: 0.1rem;">
-                                        <?php echo htmlspecialchars($msg['email']); ?></div>
+                                        <?php echo htmlspecialchars($msg['email']); ?>
+                                    </div>
                                 </td>
                                 <td data-label="Topic">
                                     <div style="display: flex; align-items: center; gap: 0.75rem;">
@@ -109,9 +111,6 @@ include 'includes/header.php';
         </div>
     </main>
 </div>
-</body>
-
-</html>
 </body>
 
 </html>

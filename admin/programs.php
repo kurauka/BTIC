@@ -88,7 +88,8 @@ include 'includes/header.php';
                             </td>
                             <td data-label="Designation">
                                 <div style="font-weight: 700; color: var(--white); font-size: 1.1rem;">
-                                    <?php echo htmlspecialchars($prog['title']); ?></div>
+                                    <?php echo htmlspecialchars($prog['title']); ?>
+                                </div>
                             </td>
                             <td data-label="Overview" style="color: var(--muted); line-height: 1.5; font-size: 0.9rem;">
                                 <?php echo substr(htmlspecialchars($prog['description']), 0, 100) . '...'; ?>
@@ -113,33 +114,9 @@ include 'includes/header.php';
 
 <!-- Initialization Modal -->
 <style>
-    .modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.85);
-        backdrop-filter: blur(15px);
-        z-index: 2000;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: all 0.4s ease;
-    }
-
-    .modal-overlay.active {
-        display: flex;
-        opacity: 1;
-    }
-
     .modal-content-glass {
         width: 100%;
         max-width: 550px;
-        transform: scale(0.9);
-        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .modal-overlay.active .modal-content-glass {
-        transform: scale(1);
     }
 </style>
 

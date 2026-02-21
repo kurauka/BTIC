@@ -40,7 +40,7 @@ include 'includes/header.php';
             <p class="section-subtitle">Credential management and system-wide administrative overrides.</p>
         </header>
 
-        <div style="max-width: 650px;">
+        <div style="max-width: 650px; width: 100%;">
             <?php if (isset($success)): ?>
                 <div class="glass-card"
                     style="padding: 1rem 1.5rem; margin-bottom: 2rem; border-color: var(--teal); background: rgba(0, 201, 167, 0.05); color: var(--teal); display: flex; align-items: center; gap: 0.75rem;">

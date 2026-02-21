@@ -28,6 +28,8 @@ include 'includes/header.php';
         $stats_programs = $conn->query("SELECT COUNT(*) FROM programs")->fetchColumn();
         $stats_events = $conn->query("SELECT COUNT(*) FROM events")->fetchColumn();
         $stats_messages = $conn->query("SELECT COUNT(*) FROM messages WHERE is_read = 0")->fetchColumn();
+        $stats_pending_members = $conn->query("SELECT COUNT(*) FROM membership_requests WHERE status = 'pending'")->fetchColumn();
+        $stats_total_members = $conn->query("SELECT COUNT(*) FROM membership_requests WHERE status = 'approved'")->fetchColumn();
 
         // Recent Messages
         $recent_msgs = $conn->query("SELECT * FROM messages ORDER BY created_at DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
@@ -76,6 +78,21 @@ include 'includes/header.php';
 
             @media (max-width: 1200px) {
                 .content-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .stats-grid {
+                    grid-template-columns: 1fr;
+                    margin-bottom: 1.5rem;
+                }
+
+                .stat-value {
+                    font-size: 2.2rem;
+                }
+
+                .qa-grid {
                     grid-template-columns: 1fr;
                 }
             }
@@ -199,55 +216,129 @@ include 'includes/header.php';
                 <div class="stat-value"><?php echo $stats_events; ?></div>
             </div>
             <div class="glass-card stat-card">
-                <div class="stat-label">Inbound Messages</div>
+                <div class="stat-label">Messages</div>
                 <div class="stat-value"><?php echo $stats_messages; ?></div>
+            </div>
+            <div class="glass-card stat-card">
+                <div class="stat-label">Pending Members</div>
+                <div class="stat-value" style="color: var(--amber);"><?php echo $stats_pending_members; ?></div>
+            </div>
+            <div class="glass-card stat-card">
+                <div class="stat-label">Total Members</div>
+                <div class="stat-value" style="color: var(--teal);"><?php echo $stats_total_members; ?></div>
             </div>
         </div>
 
         <div class="content-grid">
             <!-- Recent Activity -->
-            <div class="glass-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <h3 style="font-size: 1.2rem;"><i class="ri-mail-unread-line" style="color:var(--accent)"></i>
-                        Recent Inquiries</h3>
-                    <a href="messages.php" class="btn btn-secondary"
-                        style="padding: 0.5rem 1rem; font-size: 0.85rem;">Manage All</a>
+            <div style="display: flex; flex-direction: column; gap: 2rem;">
+                <!-- Messages -->
+                <div class="glass-card">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h3 style="font-size: 1.2rem;"><i class="ri-mail-unread-line" style="color:var(--accent)"></i>
+                            Recent Inquiries</h3>
+                        <a href="messages.php" class="btn btn-secondary"
+                            style="padding: 0.5rem 1rem; font-size: 0.85rem;">Manage All</a>
+                    </div>
+
+                    <?php if (count($recent_msgs) > 0): ?>
+                        <table class="premium-table">
+                            <thead>
+                                <tr>
+                                    <th>Sender</th>
+                                    <th>Inquiry Type</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($recent_msgs as $msg): ?>
+                                    <tr>
+                                        <td data-label="Sender">
+                                            <div style="font-weight: 600;">
+                                                <?php echo htmlspecialchars($msg['first_name'] . ' ' . $msg['last_name']); ?>
+                                            </div>
+                                            <div style="font-size: 0.75rem; color: var(--muted);">
+                                                <?php echo htmlspecialchars($msg['email']); ?>
+                                            </div>
+                                        </td>
+                                        <td data-label="Type">
+                                            <?php echo htmlspecialchars($msg['interest_type'] ?? 'Inquiry'); ?>
+                                        </td>
+                                        <td data-label="Status">
+                                            <?php if ($msg['is_read']): ?>
+                                                <span class="badge">Viewed</span>
+                                            <?php else: ?>
+                                                <span class="badge badge-accent">New</span>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <div style="text-align: center; padding: 2rem; color: var(--muted);">No new messages to display.
+                        </div>
+                    <?php endif; ?>
                 </div>
 
-                <?php if (count($recent_msgs) > 0): ?>
-                    <table class="premium-table">
-                        <thead>
-                            <tr>
-                                <th>Sender</th>
-                                <th>Inquiry Type</th>
-                                <th>Received</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($recent_msgs as $msg): ?>
+                <!-- Recent Members -->
+                <?php
+                $recent_members = $conn->query("SELECT * FROM membership_requests ORDER BY created_at DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
+                ?>
+                <div class="glass-card">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h3 style="font-size: 1.2rem;"><i class="ri-user-add-line" style="color:var(--accent)"></i>
+                            New Applications</h3>
+                        <a href="membership.php" class="btn btn-secondary"
+                            style="padding: 0.5rem 1rem; font-size: 0.85rem;">View All</a>
+                    </div>
+
+                    <?php if (count($recent_members) > 0): ?>
+                        <table class="premium-table">
+                            <thead>
                                 <tr>
-                                    <td data-label="Sender">
-                                        <div style="font-weight: 600;">
-                                            <?php echo htmlspecialchars($msg['first_name'] . ' ' . $msg['last_name']); ?></div>
-                                    </td>
-                                    <td data-label="Type"><?php echo htmlspecialchars($msg['interest_type'] ?? 'Inquiry'); ?>
-                                    </td>
-                                    <td data-label="Date"><?php echo date('M d', strtotime($msg['created_at'])); ?></td>
-                                    <td data-label="Status">
-                                        <?php if ($msg['is_read']): ?>
-                                            <span class="badge">Viewed</span>
-                                        <?php else: ?>
-                                            <span class="badge badge-accent">New</span>
-                                        <?php endif; ?>
-                                    </td>
+                                    <th>Applicant</th>
+                                    <th>Course</th>
+                                    <th>Status</th>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                <?php else: ?>
-                    <div style="text-align: center; padding: 3rem; color: var(--muted);">No new messages to display.</div>
-                <?php endif; ?>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($recent_members as $member): ?>
+                                    <tr>
+                                        <td data-label="Applicant">
+                                            <div style="font-weight: 600;"><?php echo htmlspecialchars($member['full_name']); ?>
+                                            </div>
+                                            <div style="font-size: 0.75rem; color: var(--muted);">Adm:
+                                                <?php echo htmlspecialchars($member['admission_number']); ?>
+                                            </div>
+                                        </td>
+                                        <td data-label="Course">
+                                            <div style="font-size: 0.85rem; color: var(--muted);">
+                                                <?php echo htmlspecialchars($member['course']); ?>
+                                            </div>
+                                        </td>
+                                        <td data-label="Status">
+                                            <?php
+                                            $mstatusClass = 'badge-secondary';
+                                            if ($member['status'] == 'approved')
+                                                $mstatusClass = 'badge-accent';
+                                            if ($member['status'] == 'rejected')
+                                                $mstatusClass = 'badge-warning';
+                                            ?>
+                                            <span class="badge <?php echo $mstatusClass; ?>">
+                                                <?php echo strtoupper($member['status']); ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <div style="text-align: center; padding: 2rem; color: var(--muted);">No new applications.</div>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <!-- Side Cards -->
@@ -265,7 +356,8 @@ include 'includes/header.php';
                                 </div>
                                 <div class="event-info">
                                     <h4 style="font-size: 1rem; margin-bottom: 0.25rem; font-weight: 600;">
-                                        <?php echo htmlspecialchars($event['title']); ?></h4>
+                                        <?php echo htmlspecialchars($event['title']); ?>
+                                    </h4>
                                     <p style="font-size: 0.8rem; color: var(--muted);"><i class="ri-map-pin-2-line"></i>
                                         <?php echo htmlspecialchars($event['location']); ?></p>
                                 </div>

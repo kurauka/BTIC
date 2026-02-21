@@ -246,6 +246,36 @@
             color: var(--teal);
         }
 
+        /* Modals & Overlays */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content-glass {
+            width: 100%;
+            max-width: 550px;
+            transform: scale(0.9);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.active .modal-content-glass {
+            transform: scale(1);
+        }
+
         /* Sidebar Toggle Overlay */
         .sidebar-overlay {
             position: fixed;
@@ -277,17 +307,6 @@
             justify-content: space-between;
         }
 
-        @media (max-width: 1024px) {
-            .main-content {
-                margin-left: 0;
-                padding: 1.5rem;
-            }
-
-            .mobile-admin-header {
-                display: flex;
-            }
-        }
-
         /* Background Bloom */
         .bg-bloom {
             position: fixed;
@@ -299,6 +318,103 @@
             z-index: 0;
             pointer-events: none;
             filter: blur(100px);
+        }
+
+        /* --- Global Responsive Media Queries --- */
+
+        @media (max-width: 1024px) {
+            .main-content {
+                margin-left: 0 !important;
+                padding: 1.5rem !important;
+            }
+
+            .mobile-admin-header {
+                display: flex !important;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .glass-card {
+                padding: 1.25rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            /* Responsive Tables */
+            .premium-table thead {
+                display: none;
+            }
+
+            .premium-table tr {
+                display: block;
+                margin-bottom: 1.5rem;
+                background: rgba(255, 255, 255, 0.02);
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                padding: 1rem;
+            }
+
+            .premium-table td {
+                display: flex;
+                flex-direction: column;
+                padding: 0.75rem 0;
+                border: none !important;
+                background: none !important;
+            }
+
+            .premium-table td:not(:last-child) {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+            }
+
+            .premium-table td::before {
+                content: attr(data-label);
+                font-size: 0.7rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                color: var(--accent);
+                opacity: 0.8;
+                margin-bottom: 0.25rem;
+            }
+
+            .premium-table tr td:first-child,
+            .premium-table tr td:last-child {
+                border-radius: 0 !important;
+            }
+
+            /* Responsive Modals */
+            .modal-content,
+            .modal-content-glass {
+                width: 95% !important;
+                margin: 20px auto !important;
+                padding: 1.5rem !important;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .modal-overlay.active {
+                align-items: flex-start !important;
+                padding-top: 2rem;
+            }
+
+            /* Form Grid stacking */
+            .search-filter-grid,
+            .form-grid-2 {
+                grid-template-columns: 1fr !important;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 1rem !important;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
