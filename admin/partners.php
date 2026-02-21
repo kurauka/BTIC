@@ -25,6 +25,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_partner'])) {
     // Handle File Upload
     if (isset($_FILES['logo_file']) && $_FILES['logo_file']['error'] == 0) {
         $target_dir = "../uploads/partners/";
+
+        // Ensure directory exists
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+
         $file_extension = strtolower(pathinfo($_FILES["logo_file"]["name"], PATHINFO_EXTENSION));
         $new_filename = uniqid() . '.' . $file_extension;
         $target_file = $target_dir . $new_filename;

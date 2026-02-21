@@ -26,6 +26,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_organizer'])) {
     // Handle File Upload
     if (isset($_FILES['image_file']) && $_FILES['image_file']['error'] == 0) {
         $target_dir = "../uploads/organizers/";
+
+        // Ensure directory exists
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+
         $file_extension = strtolower(pathinfo($_FILES["image_file"]["name"], PATHINFO_EXTENSION));
         $new_filename = uniqid() . '.' . $file_extension;
         $target_file = $target_dir . $new_filename;
