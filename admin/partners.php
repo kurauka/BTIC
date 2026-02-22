@@ -110,10 +110,8 @@ include 'includes/header.php';
                                 <div
                                     style="width: 100px; height: 50px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; justify-content: center; padding: 0.75rem; overflow: hidden;">
                                     <?php if ($p['logo_url']): ?>
-                                        <img src="<?php echo htmlspecialchars($p['logo_url']); ?>"
-                                            style="max-width: 100%; max-height: 100%; object-fit: contain; filter: grayscale(1) brightness(2) contrast(0.5); transition: all 0.3s ease;"
-                                            onmouseover="this.style.filter='grayscale(0) brightness(1) contrast(1)'"
-                                            onmouseout="this.style.filter='grayscale(1) brightness(2) contrast(0.5)'">
+                                        <img src="../<?php echo htmlspecialchars($p['logo_url']); ?>"
+                                            style="max-width: 100%; max-height: 100%; object-fit: contain; transition: all 0.3s ease;">
                                     <?php else: ?>
                                         <i class="ri-shield-user-line"
                                             style="color: var(--muted); opacity: 0.3; font-size: 1.5rem;"></i>

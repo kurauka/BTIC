@@ -114,7 +114,7 @@ include 'includes/header.php';
                                     <div
                                         style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; border: 2px solid var(--border); background: var(--bg-deep);">
                                         <?php if ($org['image_url']): ?>
-                                            <img src="<?php echo htmlspecialchars($org['image_url']); ?>"
+                                            <img src="../<?php echo htmlspecialchars($org['image_url']); ?>"
                                                 style="width: 100%; height: 100%; object-fit: cover;">
                                         <?php else: ?>
                                             <div
