@@ -2710,8 +2710,7 @@
       if (status && msg) {
         showToast(status, msg);
         // Clean up URL
-        const newUrl = window.location.pathnam
-     e;
+        const newUrl = window.location.pathname;
         window.history.replaceState({}, document.title, newUrl);
       }
     });
